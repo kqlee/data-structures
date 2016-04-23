@@ -7,10 +7,18 @@ var HashTable = function() {
 
 HashTable.prototype.insert = function(k, v) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  
-  this._storage.set(index, []);
   var currentBucket = this._storage.get(index);
-  currentBucket.push([k, v]);
+  if ( currentBucket ) {
+    for ( var i = 0; i < currentBucket.length; i++) {
+      if (currentBucket[i][0] === k) {
+        currentBucket[i][1] = v;
+      }
+    }
+    currentBucket.push([k, v]);  
+  } else {
+    this._storage.set(index, []);
+    this._storage.get(index).push([k, v]);  
+  }
 };
 
 HashTable.prototype.retrieve = function(k) {
